@@ -67,7 +67,7 @@ O **RabbitMQ** é configurado para garantir resiliência e recuperação de mens
 ### Passos
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/company/insurance-app.git
+   git clone [https://github.com/thiagosts/insurance.git]
    cd insurance-app
    ```
 
