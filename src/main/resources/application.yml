@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: insurance
+
+  aop:
+    proxy-target-class: true
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/insurance_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:secret}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: ${SPRING_RABBITMQ_PORT:5672}
+    username: ${SPRING_RABBITMQ_USERNAME:guest}
+    password: ${SPRING_RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        autoDeclare: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      catalogServiceCircuitBreaker:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slidingWindowSize: 5
+        permittedNumberOfCallsInHalfOpenState: 2
+        waitDurationInOpenState: 10s
+        recordExceptions:
+          - java.net.ConnectException
+          - org.springframework.web.client.HttpServerErrorException
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  retry:
+    instances:
+      catalogService:
+        max-attempts: 3
+        wait-duration: 500ms
+
+catalog:
+  base-url: ${CATALOG_BASE_URL:http://wiremock:8080}

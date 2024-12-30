@@ -1,0 +1,122 @@
+{
+  "rabbit_version": "3.12.0",
+  "users": [],
+  "vhosts": [],
+  "permissions": [],
+  "parameters": [],
+  "policies": [],
+  "queues": [
+    {
+      "name": "insurance_quota_received",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "quotation.dlx",
+        "x-dead-letter-routing-key": "insurance.quota.received.dlq"
+      }
+    },
+    {
+      "name": "insurance_policy_created",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "quotation.dlx",
+        "x-dead-letter-routing-key": "insurance.policy.created.dlq"
+      }
+    },
+    {
+      "name": "manual_fallback_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "insurance_quota_received.dlq",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "insurance_policy_created.dlq",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "quotation.exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "manual_fallback_exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "quotation.dlx",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "quotation.exchange",
+      "vhost": "/",
+      "destination": "insurance_quota_received",
+      "destination_type": "queue",
+      "routing_key": "insurance.quota.received",
+      "arguments": {}
+    },
+    {
+      "source": "quotation.exchange",
+      "vhost": "/",
+      "destination": "insurance_policy_created",
+      "destination_type": "queue",
+      "routing_key": "insurance.policy.created",
+      "arguments": {}
+    },
+    {
+      "source": "manual_fallback_exchange",
+      "vhost": "/",
+      "destination": "manual_fallback_queue",
+      "destination_type": "queue",
+      "routing_key": "manual.fallback",
+      "arguments": {}
+    },
+    {
+      "source": "quotation.dlx",
+      "vhost": "/",
+      "destination": "insurance_quota_received.dlq",
+      "destination_type": "queue",
+      "routing_key": "insurance.quota.received.dlq",
+      "arguments": {}
+    },
+    {
+      "source": "quotation.dlx",
+      "vhost": "/",
+      "destination": "insurance_policy_created.dlq",
+      "destination_type": "queue",
+      "routing_key": "insurance.policy.created.dlq",
+      "arguments": {}
+    }
+  ]
+}
